@@ -1,15 +1,21 @@
-FROM golang:1.8
+FROM golang:alpine
 
-WORKDIR /go/src/app
-COPY . .
+ARG pkg=github.com/agustin-sarasua/rs-property-api
 
-RUN go-wrapper download   # "go get -d -v ./..."
-RUN go-wrapper install    # "go install -v ./..."
+RUN apk add --no-cache ca-certificates
 
-# Make port available to the world outside this container
-EXPOSE 8080
+COPY . $GOPATH/src/$pkg
 
-# Define env variable
-ENV NAME World
+RUN set -ex \
+      && apk add --no-cache --virtual .build-deps \
+              git \
+      && go get -v $pkg/... \
+      && apk del .build-deps
 
-CMD ["go-wrapper", "run"] # ["app"]
+RUN go install $pkg/...
+
+# Needed for templates for the front-end app.
+WORKDIR $GOPATH/src/$pkg
+
+# Users of the image should invoke either of the commands.
+CMD echo "Use the app or pubsub_worker commands."; exit 1
