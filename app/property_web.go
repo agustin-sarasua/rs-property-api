@@ -9,7 +9,6 @@ import (
 )
 
 func CreatePropertyEndpoint(w http.ResponseWriter, req *http.Request) {
-
 	var msg m.Property
 	err := json.NewDecoder(req.Body).Decode(&msg)
 
@@ -18,8 +17,9 @@ func CreatePropertyEndpoint(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	msg.CreatedDate = c.DateTime{}
-	w.Header().Set("Content-Type", "application/json")
+	CreateProperty(&msg)
 
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(msg)
 }

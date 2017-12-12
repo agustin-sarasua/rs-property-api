@@ -1,4 +1,4 @@
-package app
+package cons
 
 const ConnectionString = "root:root@tcp(localhost:3306)/rs_db?parseTime=true&loc=UTC"
 
