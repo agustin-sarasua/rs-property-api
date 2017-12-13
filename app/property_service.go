@@ -38,6 +38,6 @@ func SavePropertyState(s *m.PropertyState) uint64 {
 		panic("E")
 	}
 	Db.Create(s)
-	log.Printf("Property ID: %+v\n", s.ID)
+	log.Printf("PropertyState ID: %+v\n", s.ID)
 	return s.ID
 }
