@@ -16,15 +16,13 @@ func TestMain(m *testing.M) {
 	// call flag.Parse() here if TestMain uses flags
 	db, _ := gorm.Open("sqlite3", "/tmp/gorm.db")
 	defer db.Close()
-
-	// Migrate the schema
+	db.LogMode(true)
 	var property model.Property
 	var address model.Address
 	var propertyState model.PropertyState
 	db.DropTableIfExists(&property, &address, &propertyState)
 	db.AutoMigrate(&property, &address, &propertyState)
-	//db.Model(&property).AddForeignKey("address_id", "addresses(id)", "CASCADE", "CASCADE")
-	//db.Model(&propertyState).AddIndex("idx_property", "property_id")
+
 	log.Printf("Running specific test")
 	db.Model(&property).Related(&address)
 	app.Db = db

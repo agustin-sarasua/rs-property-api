@@ -20,6 +20,7 @@ func main() {
 		panic("failed to connect database")
 	}
 	defer db.Close()
+	db.LogMode(true)
 
 	// Migrate the schema
 	var property m.Property
