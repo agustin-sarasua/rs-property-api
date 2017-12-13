@@ -8,7 +8,6 @@ import (
 
 func CreateProperty(p *m.Property) uint64 {
 	log.Printf("Creating new Property: %+v\n", p)
-	log.Printf("Creating new Address: %+v\n", p.Address)
 	Db.Create(p)
 	log.Printf("Property ID: %+v\n", p.ID)
 	return p.ID
