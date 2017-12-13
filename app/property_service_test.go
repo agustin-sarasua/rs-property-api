@@ -5,6 +5,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/agustin-sarasua/rs-model"
+
 	model "github.com/agustin-sarasua/rs-model"
 	"github.com/agustin-sarasua/rs-property-api/app"
 	"github.com/jinzhu/gorm"
@@ -44,4 +46,33 @@ func TestCreateProperty(t *testing.T) {
 		t.Errorf("Property was not saved")
 	}
 
+}
+
+func TestValidateProperty(t *testing.T) {
+	p := model.Property{Type: "APARTAMENTO", Orientation: "FRENTE", State: 3, Address: &m.Address{}}
+	errs := app.ValidateProperty(&p)
+	if len(errs) > 0 {
+		t.Errorf("Error validating property")
+	}
+
+	p = model.Property{Type: "FRUTA", Orientation: "FRENTE", State: 3}
+	errs = app.ValidateProperty(&p)
+	log.Printf("Errores: %v", len(errs))
+	if len(errs) != 2 {
+		t.Errorf("Error validating property")
+	}
+
+	p = model.Property{Type: "FRUTA", Orientation: "FRUTA", State: 3, Address: &m.Address{}}
+	errs = app.ValidateProperty(&p)
+	log.Printf("Errores: %v", len(errs))
+	if len(errs) != 2 {
+		t.Errorf("Error validating property")
+	}
+
+	p = model.Property{Type: "FRUTA", Orientation: "FRUTA", State: 23, Address: &m.Address{}}
+	errs = app.ValidateProperty(&p)
+	log.Printf("Errores: %v", len(errs))
+	if len(errs) != 3 {
+		t.Errorf("Error validating property")
+	}
 }
