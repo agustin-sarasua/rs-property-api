@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	m "github.com/agustin-sarasua/rs-model"
-	"github.com/agustin-sarasua/rs-property-api/cons"
 
 	"github.com/agustin-sarasua/rs-property-api/app"
 	"github.com/gorilla/mux"
@@ -15,7 +14,8 @@ import (
 )
 
 func main() {
-	db, err := gorm.Open("mysql", cons.ConnectionString)
+	db, err := gorm.Open("mysql", app.ConnectionString)
+	app.Db = db
 	if err != nil {
 		panic("failed to connect database")
 	}
@@ -24,9 +24,10 @@ func main() {
 	// Migrate the schema
 	var property m.Property
 	var address m.Address
+	db.DropTableIfExists(&property, &address)
 	db.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(&property, &address)
-	db.Model(&property).AddForeignKey("address_id", "addresses(id)", "CASCADE", "CASCADE")
-	//db.Model(&property).Related(&address, "Address")
+	//db.Model(&property).AddForeignKey("address_id", "addresses(id)", "CASCADE", "CASCADE")
+	db.Model(&property).Related(&address)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/property", app.CreatePropertyEndpoint).Methods("POST")
