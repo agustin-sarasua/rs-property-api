@@ -1,6 +1,6 @@
 package app
 
-const ConnectionString = "root:root@tcp(localhost:3306)/rs_db?parseTime=true&loc=UTC"
+const ConnectionString = "root:root@tcp(localhost:3306)/rs_db?parseTime=true&loc=UTC&charset=utf8"
 
 const PropertyInsertQuery = `INSERT INTO rs_db.properties
 								(description,
@@ -38,23 +38,3 @@ const PropertyInsertQuery = `INSERT INTO rs_db.properties
 								(?,?,?,?,?,?,?,?,?,?,
 								?,?,?,?,?,?,?,?,?,?,
 								?,?,?,?,?,?,?,?,?,?,?);`
-
-// const PropertyInsertQuery = `INSERT INTO rs_db.properties
-// 								(type,
-// 								bedrooms,
-// 								bathrooms,
-// 								showers,
-// 								size,
-// 								expenses,
-// 								floors,
-// 								courtyard_size,
-// 								kitchen_size,
-// 								address_street,
-// 								address_neighborhood,
-// 								address_city,
-// 								address_country,
-// 								address_postal_code,
-// 								address_latitude,
-// 								address_longitude)
-// 								VALUES
-// 								(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);`

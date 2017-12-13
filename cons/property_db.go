@@ -1,6 +1,6 @@
 package cons
 
-const ConnectionString = "root:root@tcp(localhost:3306)/rs_db?parseTime=true&loc=UTC"
+const ConnectionString = "root:root@tcp(localhost:3306)/rs_db?parseTime=true&loc=UTC&charset=utf8"
 
 const PropertyInsertQuery = `INSERT INTO rs_db.properties
 								(description,
