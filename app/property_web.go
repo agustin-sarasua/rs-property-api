@@ -46,6 +46,21 @@ func UpdatePropertyEndpoint(w http.ResponseWriter, req *http.Request) {
 }
 
 func SavePropertyStateEndpoint(w http.ResponseWriter, req *http.Request) {
+	id, _ := strconv.ParseUint(mux.Vars(req)["id"], 10, 64)
+	var msg m.PropertyState
+	err := json.NewDecoder(req.Body).Decode(&msg)
+
+	if err != nil {
+		c.ErrorWithJSON(w, "", http.StatusBadRequest)
+		return
+	}
+	msg.CreatedAt = time.Now()
+	msg.PropertyID = id
+	SavePropertyState(&msg)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(msg)
 }
 
 func GetPropertyEndpoint(w http.ResponseWriter, req *http.Request) {

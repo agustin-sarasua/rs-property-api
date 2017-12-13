@@ -29,3 +29,15 @@ func LoadProperty(pid uint64) *m.Property {
 	p.Address = &a
 	return &p
 }
+
+func SavePropertyState(s *m.PropertyState) uint64 {
+	log.Printf("Creating new PropertyState: %+v\n", s)
+	var p m.Property
+	Db.Find(&p, s.PropertyID)
+	if &p == nil {
+		panic("E")
+	}
+	Db.Create(s)
+	log.Printf("Property ID: %+v\n", s.ID)
+	return s.ID
+}
