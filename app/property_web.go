@@ -24,14 +24,13 @@ func CreatePropertyEndpoint(w http.ResponseWriter, req *http.Request) {
 	msg.CreatedAt = time.Now()
 	if id, errs := CreateProperty(&msg); len(errs) > 0 {
 		log.Printf("Error creating property")
-		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(m.ErrorResponse{Errors: m.JSONErrs(errs)})
+		json.NewEncoder(w).Encode(m.BuildErrorResponse(errs))
 	} else {
-		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
 		fmt.Fprintf(w, "{id: %q}", id)
 	}
+	w.Header().Set("Content-Type", "application/json")
 }
 
 func UpdatePropertyEndpoint(w http.ResponseWriter, req *http.Request) {

@@ -1,7 +1,6 @@
 package app
 
 import (
-	"errors"
 	"log"
 	"os"
 	"testing"
@@ -12,6 +11,16 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
+
+var address = m.Address{Street: "Av. Sarmiento", Number: "2542", ApartmentNumber: "1202",
+	Neighborhood: "PUNTA_CARRETAS", City: "MVD", Country: "UY", PostalCode: "11300",
+	Location: m.Location{Latitude: 12.312312, Longitude: -123.123123}}
+var aptoOK = model.Property{Type: "APARTAMENTO", Orientation: "FRENTE", State: 3,
+	Address: &address, ApartmentsPerFloor: 3, Bedrooms: 2, BedroomsSizes: "54m2,32m2,50m2",
+	Kitchens: 1, KitchenSizes: "30m2", Bathrooms: 3, BuildingName: "Edificio Esperalda", Amenities: "GYM,BBQ",
+	ConstructionYear: 2009, CourtyardSize: 78, Elevators: 3, BalconySize: "12m2", TerraceSize: "40m2",
+	Description: "Hermoso apto", Expenses: 180000, Floors: 1, GarageSize: 25, LivingroomSize: 45,
+	Padron: "AA1234"}
 
 func TestMain(m *testing.M) {
 	log.Printf("Running test main")
@@ -34,15 +43,13 @@ func TestMain(m *testing.M) {
 
 func TestCreateProperty(t *testing.T) {
 	log.Println("Running TestCreateProperty")
-	var p model.Property
-	p = model.Property{Type: "APARTAMENTO", Orientation: "FRENTE", State: 3, Address: &m.Address{}}
 
-	id, errs := CreateProperty(&p)
+	id, errs := CreateProperty(&aptoOK)
 	if len(errs) > 0 {
 		t.Errorf("Property was not saved")
 	}
 
-	log.Printf("Loading Property recently saved ID %v\n", p.ID)
+	log.Printf("Loading Property recently saved ID %v\n", aptoOK.ID)
 	if err := Db.Find(&model.Property{}, id).Error; err != nil {
 		t.Errorf("Property was not saved, err= %v", err)
 	}
@@ -75,9 +82,4 @@ func TestValidateProperty(t *testing.T) {
 	if len(errs) != 3 {
 		t.Errorf("Error validating property")
 	}
-}
-
-func TestErrorParsing(t *testing.T) {
-	e := errors.New("msg")
-	log.Printf("Errores: %v", e.Error())
 }
