@@ -1,4 +1,4 @@
-package app_test
+package app
 
 import (
 	"log"
@@ -8,7 +8,6 @@ import (
 	"github.com/agustin-sarasua/rs-model"
 
 	model "github.com/agustin-sarasua/rs-model"
-	"github.com/agustin-sarasua/rs-property-api/app"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
@@ -27,50 +26,50 @@ func TestMain(m *testing.M) {
 
 	log.Printf("Running specific test")
 	db.Model(&property).Related(&address)
-	app.Db = db
+	Db = db
 
 	os.Exit(m.Run())
 }
 
 func TestCreateProperty(t *testing.T) {
-	log.Printf("Running TestCreateProperty")
+	log.Println("Running TestCreateProperty")
 	var p model.Property
-	p = model.Property{Type: "RENTAL"}
-	id := app.CreateProperty(&p)
+	p = model.Property{Type: "APARTAMENTO", Orientation: "FRENTE", State: 3, Address: &m.Address{}}
 
-	log.Printf("Loading Property recently saved ID %v", p.ID)
-	var pSaved model.Property
-	app.Db.Find(&pSaved, id)
-
-	if &pSaved == nil {
+	id, errs := CreateProperty(&p)
+	if len(errs) > 0 {
 		t.Errorf("Property was not saved")
 	}
 
+	log.Printf("Loading Property recently saved ID %v\n", p.ID)
+	if err := Db.Find(&model.Property{}, id).Error; err != nil {
+		t.Errorf("Property was not saved, err= %v", err)
+	}
 }
 
 func TestValidateProperty(t *testing.T) {
 	p := model.Property{Type: "APARTAMENTO", Orientation: "FRENTE", State: 3, Address: &m.Address{}}
-	errs := app.ValidateProperty(&p)
+	errs := validateProperty(&p)
 	if len(errs) > 0 {
 		t.Errorf("Error validating property")
 	}
 
 	p = model.Property{Type: "FRUTA", Orientation: "FRENTE", State: 3}
-	errs = app.ValidateProperty(&p)
+	errs = validateProperty(&p)
 	log.Printf("Errores: %v", len(errs))
 	if len(errs) != 2 {
 		t.Errorf("Error validating property")
 	}
 
 	p = model.Property{Type: "FRUTA", Orientation: "FRUTA", State: 3, Address: &m.Address{}}
-	errs = app.ValidateProperty(&p)
+	errs = validateProperty(&p)
 	log.Printf("Errores: %v", len(errs))
 	if len(errs) != 2 {
 		t.Errorf("Error validating property")
 	}
 
 	p = model.Property{Type: "FRUTA", Orientation: "FRUTA", State: 23, Address: &m.Address{}}
-	errs = app.ValidateProperty(&p)
+	errs = validateProperty(&p)
 	log.Printf("Errores: %v", len(errs))
 	if len(errs) != 3 {
 		t.Errorf("Error validating property")
