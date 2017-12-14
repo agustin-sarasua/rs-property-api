@@ -1,6 +1,7 @@
 package app
 
 import (
+	"errors"
 	"log"
 	"os"
 	"testing"
@@ -74,4 +75,9 @@ func TestValidateProperty(t *testing.T) {
 	if len(errs) != 3 {
 		t.Errorf("Error validating property")
 	}
+}
+
+func TestErrorParsing(t *testing.T) {
+	e := errors.New("msg")
+	log.Printf("Errores: %v", e.Error())
 }

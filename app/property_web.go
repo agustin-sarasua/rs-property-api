@@ -2,6 +2,8 @@ package app
 
 import (
 	"encoding/json"
+	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -20,11 +22,16 @@ func CreatePropertyEndpoint(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	msg.CreatedAt = time.Now()
-	CreateProperty(&msg)
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(msg)
+	if id, errs := CreateProperty(&msg); len(errs) > 0 {
+		log.Printf("Error creating property")
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(m.ErrorResponse{Errors: m.JSONErrs(errs)})
+	} else {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusCreated)
+		fmt.Fprintf(w, "{id: %q}", id)
+	}
 }
 
 func UpdatePropertyEndpoint(w http.ResponseWriter, req *http.Request) {
