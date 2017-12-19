@@ -1,4 +1,4 @@
-package app
+package app_test
 
 import (
 	"log"
@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/agustin-sarasua/rs-model"
+	"github.com/agustin-sarasua/rs-property-api/app"
 
 	model "github.com/agustin-sarasua/rs-model"
 	"github.com/jinzhu/gorm"
@@ -36,7 +37,7 @@ func TestMain(m *testing.M) {
 
 	log.Printf("Running specific test")
 	db.Model(&property).Related(&address)
-	Db = db
+	app.Db = db
 
 	os.Exit(m.Run())
 }
@@ -44,42 +45,13 @@ func TestMain(m *testing.M) {
 func TestCreateProperty(t *testing.T) {
 	log.Println("Running TestCreateProperty")
 
-	id, errs := CreateProperty(&aptoOK)
+	id, errs := app.CreateProperty(&aptoOK)
 	if len(errs) > 0 {
 		t.Errorf("Property was not saved")
 	}
 
 	log.Printf("Loading Property recently saved ID %v\n", aptoOK.ID)
-	if err := Db.Find(&model.Property{}, id).Error; err != nil {
+	if err := app.Db.Find(&model.Property{}, id).Error; err != nil {
 		t.Errorf("Property was not saved, err= %v", err)
-	}
-}
-
-func TestValidateProperty(t *testing.T) {
-	p := model.Property{Type: "APARTAMENTO", Orientation: "FRENTE", State: 3, Address: &m.Address{}}
-	errs := validateProperty(&p)
-	if len(errs) > 0 {
-		t.Errorf("Error validating property")
-	}
-
-	p = model.Property{Type: "FRUTA", Orientation: "FRENTE", State: 3}
-	errs = validateProperty(&p)
-	log.Printf("Errores: %v", len(errs))
-	if len(errs) != 2 {
-		t.Errorf("Error validating property")
-	}
-
-	p = model.Property{Type: "FRUTA", Orientation: "FRUTA", State: 3, Address: &m.Address{}}
-	errs = validateProperty(&p)
-	log.Printf("Errores: %v", len(errs))
-	if len(errs) != 2 {
-		t.Errorf("Error validating property")
-	}
-
-	p = model.Property{Type: "FRUTA", Orientation: "FRUTA", State: 23, Address: &m.Address{}}
-	errs = validateProperty(&p)
-	log.Printf("Errores: %v", len(errs))
-	if len(errs) != 3 {
-		t.Errorf("Error validating property")
 	}
 }
