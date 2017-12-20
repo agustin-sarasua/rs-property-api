@@ -2,8 +2,7 @@ package app
 
 import (
 	"fmt"
-	"log"
-	"testing"
+	"time"
 
 	c "github.com/agustin-sarasua/rs-common"
 	m "github.com/agustin-sarasua/rs-model"
@@ -16,34 +15,16 @@ func validateProperty(p *m.Property) []error {
 	errs = c.ValidateExistInMap(m.Orientation, p.Orientation, "Orientation is incorrect", errs)
 	errs = c.ValidateRangeCondition(0, 10, p.State, fmt.Sprintf("State should be between %v and %v", 0, 10), errs)
 	errs = c.ValidateCondition(func() bool { return p.Address != nil }, "Address can not be empty", errs)
+	errs = c.ValidatePositiveNumber(p.Bedrooms, "Bedrooms should be positive", errs)
+	errs = c.ValidatePositiveNumber(p.Bathrooms, "Bathrooms should be positive", errs)
+	errs = c.ValidatePositiveNumber(p.Kitchens, "Kitchens should be positive", errs)
+	errs = c.ValidateRangeCondition(1800, time.Now().Year(), p.ConstructionYear, "ConstructionYear should be between 1800 and Now", errs)
+	errs = c.ValidatePositiveNumber(p.Elevators, "Elevators should be positive", errs)
+	errs = c.ValidatePositiveNumber(p.CourtyardSize, "CourtyardSize should be positive", errs)
+	errs = c.ValidatePositiveNumber(p.Size, "Size should be positive", errs)
+	errs = c.ValidatePositiveNumber(p.Floors, "Floors should be positive", errs)
+	errs = c.ValidatePositiveNumber(p.GarageSize, "GarageSize should be positive", errs)
+	errs = c.ValidatePositiveNumber(p.ConstructionSize, "ConstructionSize should be positive", errs)
+	errs = c.ValidatePositiveNumber(p.Showers, "Showers should be positive", errs)
 	return errs
-}
-
-func testValidateProperty(t *testing.T) {
-	p := m.Property{Type: "APARTAMENTO", Orientation: "FRENTE", State: 3, Address: &m.Address{}}
-	errs := validateProperty(&p)
-	if len(errs) > 0 {
-		t.Errorf("Error validating property")
-	}
-
-	p = m.Property{Type: "FRUTA", Orientation: "FRENTE", State: 3}
-	errs = validateProperty(&p)
-	log.Printf("Errores: %v", len(errs))
-	if len(errs) != 2 {
-		t.Errorf("Error validating property")
-	}
-
-	p = m.Property{Type: "FRUTA", Orientation: "FRUTA", State: 3, Address: &m.Address{}}
-	errs = validateProperty(&p)
-	log.Printf("Errores: %v", len(errs))
-	if len(errs) != 2 {
-		t.Errorf("Error validating property")
-	}
-
-	p = m.Property{Type: "FRUTA", Orientation: "FRUTA", State: 23, Address: &m.Address{}}
-	errs = validateProperty(&p)
-	log.Printf("Errores: %v", len(errs))
-	if len(errs) != 3 {
-		t.Errorf("Error validating property")
-	}
 }
