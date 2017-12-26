@@ -45,9 +45,9 @@ func SavePropertyState(s *m.PropertyState) uint64 {
 	return s.ID
 }
 
-func ListProperties() ([]m.Property, error) {
+func ListProperties(offset, limit int) ([]m.Property, error) {
 	log.Println("Loading all Properties")
 	var properties []m.Property
-	Db.Find(&properties)
+	Db.Offset(offset).Limit(limit).Find(&properties)
 	return properties, nil
 }

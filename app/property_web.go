@@ -80,8 +80,8 @@ func GetPropertyEndpoint(w http.ResponseWriter, req *http.Request) {
 }
 
 func ListPropertiesEndpoint(w http.ResponseWriter, req *http.Request) {
-
-	if ps, err := ListProperties(); err != nil {
+	offset, _ := strconv.Atoi(mux.Vars(req)["offset"])
+	if ps, err := ListProperties(offset, 50); err != nil {
 		log.Printf("Error loading properties")
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(m.BuildErrorResponse([]error{err}))

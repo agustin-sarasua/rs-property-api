@@ -68,3 +68,18 @@ func TestCreateProperty_OK(t *testing.T) {
 		t.Errorf("Property was not saved, err= %v", err)
 	}
 }
+
+func TestListProperties(t *testing.T) {
+	log.Println("Creating Properties")
+	apto0 := aptoOK
+	apto1 := aptoOK
+	apto2 := aptoOK
+	app.CreateProperty(&apto0)
+	app.CreateProperty(&apto1)
+	app.CreateProperty(&apto2)
+
+	p, _ := app.ListProperties(0, 50)
+	if len(p) != 3 {
+		t.Errorf("Properties did not load correctly, len p %v", len(p))
+	}
+}

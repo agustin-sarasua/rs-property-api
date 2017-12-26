@@ -38,3 +38,7 @@ func TestValidateProperty(t *testing.T) {
 		t.Errorf("Error validating property")
 	}
 }
+
+func TestListProperties(t *testing.T) {
+
+}
