@@ -25,7 +25,7 @@ func main() {
 	var property m.Property
 	var address m.Address
 	var propertyState m.PropertyState
-	db.DropTableIfExists(&property, &address, &propertyState)
+	// db.DropTableIfExists(&property, &address, &propertyState)
 	db.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(&property, &address, &propertyState)
 	//db.Model(&property).AddForeignKey("address_id", "addresses(id)", "CASCADE", "CASCADE")
 	//db.Model(&propertyState).AddIndex("idx_property", "property_id")
