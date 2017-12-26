@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: alpline-linux-golang
-        image: gcr.io/real-estate-186513/rs-property-api:v1
+        image: gcr.io/real-estate-186513/rs-property-api:v2
         command: ["rs-property-api"]
         # This setting makes nodes pull the docker image every time before
         # starting the pod. This is useful when debugging, but should be turned
@@ -21,7 +21,7 @@ spec:
         imagePullPolicy: IfNotPresent
         env:
         - name: VERSION
-          value: "v1"
+          value: "v2"
         ports:
         - name: http-server
           containerPort: 8080
