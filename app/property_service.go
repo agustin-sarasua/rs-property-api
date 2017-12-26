@@ -44,3 +44,10 @@ func SavePropertyState(s *m.PropertyState) uint64 {
 	log.Printf("PropertyState ID: %+v\n", s.ID)
 	return s.ID
 }
+
+func ListProperties() ([]m.Property, error) {
+	log.Println("Loading all Properties")
+	var properties []m.Property
+	Db.Find(&properties)
+	return properties, nil
+}

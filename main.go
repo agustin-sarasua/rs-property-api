@@ -21,7 +21,6 @@ func main() {
 	}
 	defer db.Close()
 	db.LogMode(true)
-
 	// Migrate the schema
 	var property m.Property
 	var address m.Address

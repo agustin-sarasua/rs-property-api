@@ -81,16 +81,13 @@ func GetPropertyEndpoint(w http.ResponseWriter, req *http.Request) {
 
 func ListPropertiesEndpoint(w http.ResponseWriter, req *http.Request) {
 
-	var msg m.Property
-	err := json.NewDecoder(req.Body).Decode(&msg)
-
-	if err != nil {
-		c.ErrorWithJSON(w, "", http.StatusBadRequest)
-		return
+	if ps, err := ListProperties(); err != nil {
+		log.Printf("Error loading properties")
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(m.BuildErrorResponse([]error{err}))
+	} else {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(SearchResutlDTO{items: ps})
 	}
-	msg.CreatedAt = time.Now()
-	w.Header().Set("Content-Type", "application/json")
-
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(msg)
 }
