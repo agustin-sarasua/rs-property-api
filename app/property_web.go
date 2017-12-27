@@ -86,8 +86,9 @@ func ListPropertiesEndpoint(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(m.BuildErrorResponse([]error{err}))
 	} else {
+		log.Printf("Property List size = %v", len(ps))
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(SearchResutlDTO{items: ps})
+		json.NewEncoder(w).Encode(SearchResutlDTO{Items: ps})
 	}
 }

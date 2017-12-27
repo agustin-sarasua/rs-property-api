@@ -5,7 +5,7 @@ import (
 )
 
 type SearchResutlDTO struct {
-	items  []m.Property
-	count  int64
-	offset int64
+	Items  []m.Property
+	Count  int64
+	Offset int64
 }
