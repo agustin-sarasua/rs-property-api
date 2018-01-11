@@ -11,7 +11,7 @@ import (
 func validateProperty(p *m.Property) []error {
 	var errs []error
 
-	errs = c.ValidateExistInMap(m.PropertyTypes, p.Type, "Type is incorrect", errs)
+	//errs = c.ValidateExistInMap(m.PropertyTypes, p.Type, "Type is incorrect", errs)
 	errs = c.ValidateExistInMap(m.Orientation, p.Orientation, "Orientation is incorrect", errs)
 	errs = c.ValidateRangeCondition(0, 10, p.State, fmt.Sprintf("State should be between %v and %v", 0, 10), errs)
 	errs = c.ValidateCondition(func() bool { return p.Address != nil }, "Address can not be empty", errs)
